@@ -1,12 +1,16 @@
 * {
   margin: 0;
   padding: 0;
+  height: 100vh;
   box-sizing: border-box;
 }
 
 .grid {
   width: 100%;
+  max-width: 1600px;
   height: 800px;
+  overflow: hidden;
+  color: aliceblue;
   font-size: 100px;
   font-family: "Doto", sans-serif;
   text-align: center;
@@ -16,7 +20,6 @@
   background-repeat: repeat;
   background-position: center;
   background-image: url('../img/nightSky.jpg');
-  color: aliceblue;
 }
 
 .kirby {
@@ -32,5 +35,4 @@
   height: 40px;
   background-size: 100%;
   background-image: url(../img/star.png);
-  backdrop-filter: blur(10px);
 }

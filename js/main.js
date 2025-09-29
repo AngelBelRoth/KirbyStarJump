@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.grid')
     const kirby = document.createElement('div')
-    let isGameOver = false
-    let starCount = 18
+    const KIRBY_JUMP_HEIGHT = 300
+    let starCount = 10
     let stars = []
     let score = 0
-    let kirbyLeftSpace = 50
     let startPoint = 100
+    let kirbyLeftSpace = 50
     let kirbyBottomSpace = startPoint
     let upTimerId
     let downTimerId
@@ -15,11 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGoingRight = false
     let leftTimerId
     let rightTimerId
+    let isGameOver = false
 
     class Star {
         constructor(newStarBottom) {
-            //grid width - star width = 600 - 120 = 480
-            this.left = Math.random() * 1600
+            //grid width - star width = 1600 - 120 = 1480
+            this.left = Math.random() * 1480
             this.bottom = newStarBottom
             this.visual = document.createElement('div')
             this.visual.classList.add('star')
@@ -63,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function createKirby() {
         grid.appendChild(kirby)
         kirby.classList.add('kirby')
-        // kirbyLeftSpace = stars[0].left
+        kirbyLeftSpace = stars[0].left
         kirby.style.left = kirbyLeftSpace + 'px'
         kirby.style.bottom = kirbyBottomSpace + 'px'
     }
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isJumping = false
         clearTimeout(upTimerId)
         downTimerId = setInterval(() => {
+            //gravity 'how many px to drop' for every interval (20milisec)
             kirbyBottomSpace -= 5
             kirby.style.bottom = kirbyBottomSpace + 'px'
             if (kirbyBottomSpace <= 0) {
@@ -80,9 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
             stars.forEach(star => {
                 if (
                     (kirbyBottomSpace >= star.bottom) &&
-                    (kirbyBottomSpace <= (star.bottom + 12)) &&
-                    ((kirbyLeftSpace + 60) >= star.left) &&
-                    (kirbyLeftSpace <= (star.left + 85)) &&
+                    (kirbyBottomSpace <= (star.bottom + 11)) &&
+                    (kirbyLeftSpace >= star.left - 80) &&
+                    (kirbyLeftSpace <= star.left + 100) &&
                     !isJumping
                 ) {
                     startPoint = kirbyBottomSpace
@@ -93,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         }, 20)
     }
-    // fall()
 
     function jump() {
         clearInterval(downTimerId)
@@ -101,11 +102,11 @@ document.addEventListener('DOMContentLoaded', () => {
         upTimerId = setInterval(() => {
             kirbyBottomSpace += 20
             kirby.style.bottom = kirbyBottomSpace + 'px'
-            if (kirbyBottomSpace > startPoint + 200) {
+            if (kirbyBottomSpace > startPoint + KIRBY_JUMP_HEIGHT) {
                 fall()
                 isJumping = false
             }
-        }, 30)
+        }, 20)
     }
 
     function moveLeft() {
@@ -115,11 +116,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         isGoingLeft = true
         leftTimerId = setInterval(() => {
-            if (kirbyBottomSpace >= 0) {
+            if (kirbyLeftSpace >= 0) {
                 console.log('going left')
                 kirbyLeftSpace -= 5
-                kirby.style.left = kirbyLeftSpace + 'px'
-            } else moveRight()
+            } else {
+                kirbyLeftSpace = 1600
+            }
+            kirby.style.left = kirbyLeftSpace + 'px'
         }, 20)
     }
 
@@ -134,8 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (kirbyLeftSpace <= 1600) {
                 console.log('going right')
                 kirbyLeftSpace += 5
-                kirby.style.left = kirbyLeftSpace + 'px'
-            } else moveLeft()
+            } else {
+                kirbyLeftSpace = 0
+            }
+            kirby.style.left = kirbyLeftSpace + 'px'
         }, 20)
     }
 
@@ -171,17 +176,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function start() {
         if (!isGameOver) {
-            createKirby()
             createStars()
+            createKirby()
             setInterval(moveStars, 30)
             jump()
-            // document.addEventListener('keyup', control)
             document.addEventListener('keydown', control)
         }
     }
     start()
-
 })
 
-// Citation: Ania Kubów & M.Kazin
+// Citation: Ania Kubów
 // href: https://www.youtube.com/watch?v=dgUGTGEdVSk&list=WL&index=5&t=1545s
+// Revision: Michael Kazin
+// p.s. do "less" randomization next time, control vertial & horizontal stars gap e.g. (Y 80px/star)
