@@ -15,6 +15,8 @@ Let me know when you try it out — how many stars can your Kirby jump? ✨
 ## Demo
 
 Visit the live demo on GitHub Pages: `angelbelroth.github.io/KirbyStarJump/` or the short link above.
+![KirbyStarJump](https://github.com/user-attachments/assets/e178493f-824a-4c60-abba-37784033795f)
+![Angel Score](https://github.com/user-attachments/assets/e1d7cab6-eae2-483d-b4c0-854106bc5f6b)
 
 ## About
 
@@ -79,9 +81,9 @@ This is a personal learning project — contributions and suggestions are welcom
 
 * Created by Angel Bel
 * Citation: Ania Kubów
-* href: https://www.youtube.com/watch?v=dgUGTGEdVSk&list=WL&index=5&t=1545s
+* href: [https://www.youtube.com/watch?v=dgUGTGEdVSk&list=WL&index=5&t=1545s]
 * Revision: Michael Kazin
-* Game assets adapted from publicly available sprites or custom-made pixel art (check `img/` for sources) made by Mylocke
+* Game assets made by Mylocke adapted from publicly available sprites or custom-made pixel art (check `img/` for sources)
 
 ## License
 
