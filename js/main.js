@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.grid')
     const kirby = document.createElement('div')
     const KIRBY_JUMP_HEIGHT = 300
+    const MAX_INTERVALS = 5
+
     let starCount = 10
     let stars = []
     let score = 0
@@ -11,11 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let upTimerId
     let downTimerId
     let isJumping = false
-    let isGoingLeft = false
-    let isGoingRight = false
-    let leftTimerId
-    let rightTimerId
     let isGameOver = false
+
+    let leftIntervals = [];
+    let rightIntervals = [];
 
     class Star {
         constructor(newStarBottom) {
@@ -110,38 +111,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function moveLeft() {
-        if (isGoingRight) {
+        if (rightIntervals.length) {
+            let rightTimerId = rightIntervals.pop()
             clearInterval(rightTimerId)
-            isGoingRight = false
+        }else if(leftIntervals.length <= MAX_INTERVALS){
+            let leftTimerId = setInterval(() => {
+                if (kirbyLeftSpace >= 0) {
+                    console.log('going left')
+                    kirbyLeftSpace -= 5
+                } else {
+                    kirbyLeftSpace = 1600
+                }
+                kirby.style.left = kirbyLeftSpace + 'px'
+            }, 20)
+            leftIntervals.push(leftTimerId)
         }
-        isGoingLeft = true
-        leftTimerId = setInterval(() => {
-            if (kirbyLeftSpace >= 0) {
-                console.log('going left')
-                kirbyLeftSpace -= 5
-            } else {
-                kirbyLeftSpace = 1600
-            }
-            kirby.style.left = kirbyLeftSpace + 'px'
-        }, 20)
     }
 
     function moveRight() {
-        if (isGoingLeft) {
+        if (leftIntervals.length) {
+            let leftTimerId = leftIntervals.pop()
             clearInterval(leftTimerId)
-            isGoingLeft = false
+        }else if (rightIntervals.length <= MAX_INTERVALS){
+            rightTimerId = setInterval(() => {
+                //grid width - star width = 600 - 120 = 480
+                if (kirbyLeftSpace <= 1600) {
+                    console.log('going right')
+                    kirbyLeftSpace += 5
+                } else {
+                    kirbyLeftSpace = 0
+                }
+                kirby.style.left = kirbyLeftSpace + 'px'
+            }, 20)
+            rightIntervals.push(rightTimerId);
         }
-        isGoingRight = true
-        rightTimerId = setInterval(() => {
-            //grid width - star width = 600 - 120 = 480
-            if (kirbyLeftSpace <= 1600) {
-                console.log('going right')
-                kirbyLeftSpace += 5
-            } else {
-                kirbyLeftSpace = 0
-            }
-            kirby.style.left = kirbyLeftSpace + 'px'
-        }, 20)
     }
 
     function moveStraight() {
@@ -170,8 +173,9 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.innerHTML = score
         clearInterval(downTimerId)
         clearInterval(upTimerId)
-        clearInterval(leftTimerId)
-        clearInterval(rightTimerId)
+        leftIntervals.forEach( (leftTimerId) => clearInterval(leftIntervals) )
+        rightIntervals.forEach( (rightTimerId) => clearInterval(rightTimerId) )
+
     }
 
     function start() {
